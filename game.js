@@ -207,7 +207,7 @@ class MainScene extends Phaser.Scene {
     this.hpText.setText('HP: ' + this.playerHP);
     this.hpBar.width = Math.max(0, 200 * this.playerHP / 100);
 
-    if (this.playerHP <= 0 && !this.isPaused {
+    if (this.playerHP <= 0 && !this.isPaused) {
       this.physics.pause();
       const elapsed = Math.floor((this.time.now - this.startTime) / 1000);
       document.getElementById('finalStats').innerText = `Tempo: ${elapsed}s | Pontos: ${this.score}`;
