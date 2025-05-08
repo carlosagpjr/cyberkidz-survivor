@@ -49,12 +49,20 @@ class MainScene extends Phaser.Scene {
     this.timeText = this.add.text(400, 10, 'Time: 0s', { fontSize: '28px', fill: '#FFFFFF' }).setScrollFactor(0).setOrigin(0.5, 0);
 
     this.time.addEvent({ delay: 1000, callback: this.spawnEnemy, callbackScope: this, loop: true });
+
+    this.pausePanel = this.add.rectangle(400, 300, 300, 200, 0x000000, 0.8).setOrigin(0.5).setDepth(1000).setVisible(false);
+    this.pauseText = this.add.text(400, 240, 'PAUSADO', { fontSize: '32px', fill: '#ffffff' }).setOrigin(0.5).setDepth(1000).setVisible(false);
+    this.resumeButton = this.add.text(400, 320, 'Continuar', { fontSize: '20px', fill: '#00ffcc', backgroundColor: '#333', padding: { x: 10, y: 5 } }).setOrigin(0.5).setInteractive().setDepth(1000).setVisible(false);
+    this.resumeButton.on('pointerdown', () => this.togglePause());
+
+    this.input.keyboard.on('keydown-ESC', () => this.togglePause());
     this.physics.add.overlap(this.player, this.enemies, this.onPlayerHit, null, this);
     this.physics.add.overlap(this.bullets, this.enemies, this.onBulletHitEnemy, null, this);
     this.input.on('pointerdown', this.shoot, this);
   }
 
   update() {
+    if (this.isPaused) return;
     const speed = 200;
     this.player.setVelocity(0);
     if (this.cursors.W.isDown) this.player.setVelocityY(-speed);
@@ -172,6 +180,22 @@ class MainScene extends Phaser.Scene {
     if (enemy.hpBar) enemy.hpBar.width = Math.max(0, 40 * enemy.currentHP / enemy.maxHP);
   }
 
+  togglePause() {
+    if (!this.isPaused) {
+      this.physics.pause();
+      this.isPaused = true;
+      this.pausePanel.setVisible(true);
+      this.pauseText.setVisible(true);
+      this.resumeButton.setVisible(true);
+    } else {
+      this.physics.resume();
+      this.isPaused = false;
+      this.pausePanel.setVisible(false);
+      this.pauseText.setVisible(false);
+      this.resumeButton.setVisible(false);
+    }
+  }
+
   onPlayerHit(player, enemy) {
     if (enemy.nameLabel) enemy.nameLabel.destroy();
     if (enemy.hpBar) enemy.hpBar.destroy();
@@ -183,7 +207,7 @@ class MainScene extends Phaser.Scene {
     this.hpText.setText('HP: ' + this.playerHP);
     this.hpBar.width = Math.max(0, 200 * this.playerHP / 100);
 
-    if (this.playerHP <= 0) {
+    if (this.playerHP <= 0 && !this.isPaused {
       this.physics.pause();
       const elapsed = Math.floor((this.time.now - this.startTime) / 1000);
       document.getElementById('finalStats').innerText = `Tempo: ${elapsed}s | Pontos: ${this.score}`;
