@@ -217,15 +217,6 @@ class MainScene extends Phaser.Scene {
       });
     } else {
       this.hpBar.setAlpha(1);
-    } || !this.hpPulseTween.isPlaying()) {
-        this.hpPulseTween = this.tweens.add({
-          targets: this.hpText,
-          alpha: 0.3,
-          duration: 200,
-          yoyo: true,
-          repeat: -1
-        });
-      }
     }
     this.hpBar.width = Math.max(0, 200 * this.playerHP / 100);
 
