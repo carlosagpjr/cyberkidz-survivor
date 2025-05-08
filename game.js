@@ -27,7 +27,7 @@ class MainScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, mapWidth, mapHeight);
     this.physics.world.setBounds(0, 0, mapWidth, mapHeight);
 
-    this.player = this.physics.add.sprite(mapWidth / 2, mapHeight / 2, 'player').setCollideWorldBounds(true);
+    this.player = this.physics.add.sprite(mapWidth / 2, mapHeight / 2, 'player').setScale(0.43).setCollideWorldBounds(true);
     this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
 
     this.enemies = this.physics.add.group();
