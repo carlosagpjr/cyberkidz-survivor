@@ -7,7 +7,7 @@ class MainScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('player', 'https://labs.phaser.io/assets/sprites/phaser-dude.png');
+    this.load.image('player', './assets/player.png');
     this.load.image('crawler', 'https://labs.phaser.io/assets/sprites/ufo.png');
     this.load.image('chaser', 'https://labs.phaser.io/assets/sprites/space-baddie.png');
     this.load.image('bouncer', 'https://labs.phaser.io/assets/sprites/asteroid.png');
