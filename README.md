@@ -15,4 +15,4 @@ Feito para rodar direto no navegador (HTML5/JavaScript).
 
 Suba os arquivos `index.html` e `game.js` na raiz do seu repositório e ative o GitHub Pages em **Settings > Pages**.
 
-Acesse via: `https://seu-usuario.github.io/seu-repositorio/`
+Acesse via: `https://carlosagpjr.github.io/ciberkidz-survivor/`
