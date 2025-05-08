@@ -27,7 +27,7 @@ class MainScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, mapWidth, mapHeight);
     this.physics.world.setBounds(0, 0, mapWidth, mapHeight);
 
-    this.player = this.physics.add.sprite(mapWidth / 2, mapHeight / 2, 'player').setScale(0.43).setCollideWorldBounds(true);
+    this.player = this.physics.add.sprite(mapWidth / 2, mapHeight / 2, 'player').setScale(0.20).setCollideWorldBounds(true);
     this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
 
     this.enemies = this.physics.add.group();
@@ -42,7 +42,7 @@ class MainScene extends Phaser.Scene {
     this.playerHP = 100;
     this.bossSpawned = false;
 
-    this.hpText = this.add.text(10, 60, 'HP: 100', { fontSize: '20px', fill: '#FFFFFF' }).setScrollFactor(0);
+    this.hpText = this.add.text(110, 90, 'HP: 100', { fontSize: '16px', fill: '#FFFFFF', shadow: { offsetX: 2, offsetY: 2, color: '#000', blur: 2, fill: true } }).setOrigin(0.5).setScrollFactor(0);
     this.hpBarBg = this.add.rectangle(10, 90, 200, 20, 0x555555).setOrigin(0).setScrollFactor(0);
     this.hpBar = this.add.rectangle(10, 90, 200, 20, 0xff3333).setOrigin(0).setScrollFactor(0);
     this.scoreText = this.add.text(10, 115, 'Score: 0', { fontSize: '20px', fill: '#FFFFFF' }).setScrollFactor(0);
@@ -205,6 +205,28 @@ class MainScene extends Phaser.Scene {
     const dmg = enemy.damage || 20;
     this.playerHP -= dmg;
     this.hpText.setText('HP: ' + this.playerHP);
+    if (this.hpPulseTween) { this.hpPulseTween.stop(); this.hpPulseTween = null; }
+    this.hpBar.fillColor = this.playerHP > 50 ? 0x00ff00 : this.playerHP > 20 ? 0xffaa00 : 0xff0000;
+    if (this.playerHP <= 20) {
+      this.hpPulseTween = this.tweens.add({
+        targets: this.hpBar,
+        alpha: 0.3,
+        duration: 200,
+        yoyo: true,
+        repeat: -1
+      });
+    } else {
+      this.hpBar.setAlpha(1);
+    } || !this.hpPulseTween.isPlaying()) {
+        this.hpPulseTween = this.tweens.add({
+          targets: this.hpText,
+          alpha: 0.3,
+          duration: 200,
+          yoyo: true,
+          repeat: -1
+        });
+      }
+    }
     this.hpBar.width = Math.max(0, 200 * this.playerHP / 100);
 
     if (this.playerHP <= 0 && !this.isPaused) {
