@@ -21,7 +21,7 @@ class MainScene extends Phaser.Scene {
   create() {
     const mapWidth = 5000;
     const mapHeight = 5000;
-    this.add.tileSprite(0, 0, mapWidth, mapHeight, 'background').setOrigin(0);
+    this.background = this.add.tileSprite(0, 0, mapWidth, mapHeight, 'background').setOrigin(0);
     this.cameras.main.setBounds(0, 0, mapWidth, mapHeight);
     this.physics.world.setBounds(0, 0, mapWidth, mapHeight);
 
@@ -53,6 +53,8 @@ class MainScene extends Phaser.Scene {
   }
 
   update() {
+    this.background.tilePositionX = this.cameras.main.scrollX;
+    this.background.tilePositionY = this.cameras.main.scrollY;
     const speed = 200;
     this.player.setVelocity(0);
 
