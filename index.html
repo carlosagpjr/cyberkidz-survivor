@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CyberKidz Survivor</title>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.js"></script>
+  <style>
+    body, html { margin: 0; padding: 0; overflow: hidden; background-color: #000; font-family: sans-serif; }
+    #gameOver {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      flex-direction: column;
+      pointer-events: none;
+      z-index: 10;
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div id="gameOver">
+    <div style="margin-bottom: 10px;">🏁 Fim de Jogo</div>
+    <div id="finalStats">Tempo: 0s | Pontos: 0</div>
+  </div>
+  <script src="game.js"></script>
+</body>
+</html>
