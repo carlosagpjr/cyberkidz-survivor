@@ -21,9 +21,7 @@ class MainScene extends Phaser.Scene {
   create() {
     const mapWidth = 5000;
     const mapHeight = 5000;
-    this.background = this.add.tileSprite(0, 0, this.scale.width, this.scale.height, 'background')
-      .setScrollFactor(0)
-      .setOrigin(0);
+    this.background = this.add.tileSprite(0, 0, mapWidth, mapHeight, 'background').setOrigin(0);
     this.cameras.main.setBounds(0, 0, mapWidth, mapHeight);
     this.physics.world.setBounds(0, 0, mapWidth, mapHeight);
 
@@ -48,7 +46,7 @@ class MainScene extends Phaser.Scene {
     this.scoreText = this.add.text(10, 115, 'Score: 0', { fontSize: '20px', fill: '#FFFFFF' }).setScrollFactor(0);
     this.timeText = this.add.text(400, 10, 'Time: 0s', { fontSize: '28px', fill: '#FFFFFF' }).setScrollFactor(0).setOrigin(0.5, 0);
 
-    this.time.addEvent({ delay: 1000, callback: this.spawnEnemy, callbackScope: this, loop: true });
+    this.spawnTimer = this.time.addEvent({ delay: 1000, callback: this.spawnEnemy, callbackScope: this, loop: true });
     this.physics.add.overlap(this.player, this.enemies, this.onPlayerHit, null, this);
     this.physics.add.overlap(this.bullets, this.enemies, this.onBulletHitEnemy, null, this);
     this.input.on('pointerdown', this.shoot, this);
@@ -160,7 +158,15 @@ class MainScene extends Phaser.Scene {
 
   increaseDifficulty() {
     this.difficulty++;
-    this.time.addEvent({ delay: Math.max(300, 1000 - this.difficulty * 100), callback: this.spawnEnemy, callbackScope: this, loop: true });
+    if (this.spawnTimer) this.spawnTimer.remove();
+    this.spawnTimer = this.time.addEvent({
+      delay: Math.max(300, 1000 - this.difficulty * 100),
+      callback: this.spawnEnemy,
+      callbackScope: this,
+      loop: true
+    });
+    this.enemies.getChildren().forEach(e => { e.speed += 10; });
+  });
     this.enemies.getChildren().forEach(e => { e.speed += 10; });
   }
 
