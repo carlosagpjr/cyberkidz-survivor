@@ -6,16 +6,16 @@ class MainScene extends Phaser.Scene {
 
   preload() {
     this.load.image('player', './assets/player-icon.png');
-    this.load.image('crawler', 'https://labs.phaser.io/assets/sprites/ufo.png');
-    this.load.image('chaser', 'https://labs.phaser.io/assets/sprites/space-baddie.png');
-    this.load.image('bouncer', 'https://labs.phaser.io/assets/sprites/asteroid.png');
-    this.load.image('leaper', 'https://labs.phaser.io/assets/sprites/red_ball.png');
-    this.load.image('exploder', 'https://labs.phaser.io/assets/sprites/shinyball.png');
-    this.load.image('bruiser', 'https://labs.phaser.io/assets/sprites/blue_ball.png');
-    this.load.image('reaper', 'https://labs.phaser.io/assets/sprites/yellow_ball.png');
-    this.load.image('overlord', 'https://labs.phaser.io/assets/sprites/metalface78x92.png');
+    this.load.image('crawler', './assets/crawler-icon.png');
+    this.load.image('chaser', './assets/chaser-icon.png');
+    this.load.image('bouncer', './assets/bouncer-icon.png');
+    this.load.image('leaper', './assets/leaper-icon.png');
+    this.load.image('exploder', './assets/exploder-icon.png');
+    this.load.image('bruiser', './assets/bruiser-icon.png');
+    this.load.image('reaper', './assets/reaper-icon.png');
+    this.load.image('overlord', './assets/overlord-icon.png');
     this.load.image('bullet', 'https://labs.phaser.io/assets/sprites/bullets/bullet11.png');
-    this.load.image('background', 'https://labs.phaser.io/assets/skies/desert.png');
+    this.load.image('background', './assets/wasteland-background.png');
   }
 
   create() {
@@ -133,12 +133,12 @@ class MainScene extends Phaser.Scene {
 
       const enemyStats = {
         crawler: { speed: 60, damage: 15, hp: 20 },
-        chaser: { speed: 80, damage: 20, hp: 20 },
+        chaser: { speed: 80, damage: 30, hp: 20 },
         bouncer: { speed: 100, damage: 25, hp: 25 },
         leaper: { speed: 130, damage: 25, hp: 20 },
-        exploder: { speed: 100, damage: 30, hp: 10 },
-        bruiser: { speed: 90, damage: 35, hp: 40 },
-        reaper: { speed: 120, damage: 40, hp: 35 },
+        exploder: { speed: 100, damage: 30, hp: 15 },
+        bruiser: { speed: 120, damage: 30, hp: 45 },
+        reaper: { speed: 100, damage: 45, hp: 50 },
         overlord: { speed: 100, damage: 60, hp: 100 }
       };
 
