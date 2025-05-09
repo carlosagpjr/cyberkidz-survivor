@@ -15,13 +15,13 @@ class MainScene extends Phaser.Scene {
     this.load.image('reaper', './assets/reaper-icon.png');
     this.load.image('overlord', './assets/overlord-icon.png');
     this.load.image('bullet', 'https://labs.phaser.io/assets/sprites/bullets/bullet11.png');
-    this.load.image('background', './assets/wasteland-background1.png');
+    this.load.image('background', './assets/wasteland-background.png');
   }
 
   create() {
     const mapWidth = 5000;
     const mapHeight = 5000;
-    this.background = this.add.tileSprite(0, 0, mapWidth, mapHeight, 'background').setOrigin(0);
+    this.add.tileSprite(0, 0, mapWidth, mapHeight, 'background').setOrigin(0);
     this.cameras.main.setBounds(0, 0, mapWidth, mapHeight);
     this.physics.world.setBounds(0, 0, mapWidth, mapHeight);
 
@@ -46,15 +46,13 @@ class MainScene extends Phaser.Scene {
     this.scoreText = this.add.text(10, 115, 'Score: 0', { fontSize: '20px', fill: '#FFFFFF' }).setScrollFactor(0);
     this.timeText = this.add.text(400, 10, 'Time: 0s', { fontSize: '28px', fill: '#FFFFFF' }).setScrollFactor(0).setOrigin(0.5, 0);
 
-    this.spawnTimer = this.time.addEvent({ delay: 1000, callback: this.spawnEnemy, callbackScope: this, loop: true });
+    this.time.addEvent({ delay: 1000, callback: this.spawnEnemy, callbackScope: this, loop: true });
     this.physics.add.overlap(this.player, this.enemies, this.onPlayerHit, null, this);
     this.physics.add.overlap(this.bullets, this.enemies, this.onBulletHitEnemy, null, this);
     this.input.on('pointerdown', this.shoot, this);
   }
 
   update() {
-    this.background.tilePositionX = this.cameras.main.scrollX;
-    this.background.tilePositionY = this.cameras.main.scrollY;
     const speed = 200;
     this.player.setVelocity(0);
 
@@ -158,15 +156,7 @@ class MainScene extends Phaser.Scene {
 
   increaseDifficulty() {
     this.difficulty++;
-    if (this.spawnTimer) this.spawnTimer.remove();
-    this.spawnTimer = this.time.addEvent({
-      delay: Math.max(300, 1000 - this.difficulty * 100),
-      callback: this.spawnEnemy,
-      callbackScope: this,
-      loop: true
-    });
-    this.enemies.getChildren().forEach(e => { e.speed += 10; });
-  });
+    this.time.addEvent({ delay: Math.max(300, 1000 - this.difficulty * 100), callback: this.spawnEnemy, callbackScope: this, loop: true });
     this.enemies.getChildren().forEach(e => { e.speed += 10; });
   }
 
