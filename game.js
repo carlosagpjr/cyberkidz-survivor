@@ -1,4 +1,27 @@
-this.background = this.add.tileSprite(0, 0, this.scale.width, this.scale.height, 'background')
+class MainScene extends Phaser.Scene {
+  constructor() {
+    super('MainScene');
+    this.weaponType = 'range';
+  }
+
+  preload() {
+    this.load.image('player', './assets/player-icon.png');
+    this.load.image('crawler', './assets/crawler-icon.png');
+    this.load.image('chaser', './assets/chaser-icon.png');
+    this.load.image('bouncer', './assets/bouncer-icon.png');
+    this.load.image('leaper', './assets/leaper-icon.png');
+    this.load.image('exploder', './assets/exploder-icon.png');
+    this.load.image('bruiser', './assets/bruiser-icon.png');
+    this.load.image('reaper', './assets/reaper-icon.png');
+    this.load.image('overlord', './assets/overlord-icon.png');
+    this.load.image('bullet', 'https://labs.phaser.io/assets/sprites/bullets/bullet11.png');
+    this.load.image('background', './assets/wasteland-background.png');
+  }
+
+  create() {
+    const mapWidth = 5000;
+    const mapHeight = 5000;
+    this.background = this.add.tileSprite(0, 0, this.scale.width, this.scale.height, 'background')
       .setScrollFactor(0)
       .setOrigin(0);
     this.cameras.main.setBounds(0, 0, mapWidth, mapHeight);
