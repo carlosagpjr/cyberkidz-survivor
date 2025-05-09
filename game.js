@@ -43,7 +43,8 @@ class MainScene extends Phaser.Scene {
     this.hpText = this.add.text(10, 60, 'HP: 100', { fontSize: '20px', fill: '#FFFFFF' }).setScrollFactor(0);
     this.hpBarBg = this.add.rectangle(10, 90, 200, 20, 0x555555).setOrigin(0).setScrollFactor(0);
     this.hpBar = this.add.rectangle(10, 90, 200, 20, 0xff3333).setOrigin(0).setScrollFactor(0);
-       
+    this.scoreText = this.add.text(10, 115, 'Score: 0', { fontSize: '20px', fill: '#FFFFFF' }).setScrollFactor(0);
+    this.timeText = this.add.text(400, 10, 'Time: 0s', { fontSize: '28px', fill: '#FFFFFF' }).setScrollFactor(0).setOrigin(0.5, 0);
 
     this.time.addEvent({ delay: 1000, callback: this.spawnEnemy, callbackScope: this, loop: true });
     this.physics.add.overlap(this.player, this.enemies, this.onPlayerHit, null, this);
@@ -60,17 +61,14 @@ class MainScene extends Phaser.Scene {
 
     if (this.cursors.A.isDown) {
       this.player.setVelocityX(-speed);
-      this.player.setFlipX(true);
+      this.player.setFlipX(true); // Espelha para a esquerda
     } else if (this.cursors.D.isDown) {
       this.player.setVelocityX(speed);
-      this.player.setFlipX(false);
+      this.player.setFlipX(false); // Normal para a direita
     }
 
     this.enemies.getChildren().forEach(enemy => {
       this.physics.moveToObject(enemy, this.player, enemy.speed || 100);
-      if (enemy.body.velocity.x < 0) enemy.setFlipX(true);
-      else if (enemy.body.velocity.x > 0) enemy.setFlipX(false);
-
       if (enemy.nameLabel) enemy.nameLabel.setPosition(enemy.x, enemy.y - 35);
       if (enemy.hpBarBg) enemy.hpBarBg.setPosition(enemy.x - 20, enemy.y - 20);
       if (enemy.hpBar) enemy.hpBar.setPosition(enemy.x - 20, enemy.y - 20);
@@ -116,35 +114,44 @@ class MainScene extends Phaser.Scene {
     ];
     const spawnPoint = Phaser.Utils.Array.GetRandom(sides);
 
-    const enemy = this.enemies.create(spawnPoint.x, spawnPoint.y, 'chaser');
-    const phaseTypes = {
-      1: ['crawler', 'chaser', 'bouncer', 'leaper', 'exploder'],
-      2: ['bruiser', 'reaper', 'crawler', 'chaser', 'bouncer', 'leaper', 'exploder'],
-      default: ['bruiser', 'reaper', 'crawler', 'chaser', 'bouncer', 'leaper', 'exploder']
-    };
-    const types = phaseTypes[this.phase] || phaseTypes.default;
-    enemy.enemyType = Phaser.Utils.Array.GetRandom(types);
+    if (!this.bossSpawned && this.phase === 3) {
+      const enemy = this.enemies.create(spawnPoint.x, spawnPoint.y, 'overlord');
+      enemy.setScale(1.5);
+      enemy.enemyType = 'overlord';
+      this.bossSpawned = true;
+    } else {
+      const enemy = this.enemies.create(spawnPoint.x, spawnPoint.y, 'chaser');
 
-    const enemyStats = {
-      crawler: { speed: 60, damage: 15, hp: 20 },
-      chaser: { speed: 80, damage: 20, hp: 20 },
-      bouncer: { speed: 100, damage: 25, hp: 25 },
-      leaper: { speed: 130, damage: 25, hp: 20 },
-      exploder: { speed: 100, damage: 30, hp: 10 },
-      bruiser: { speed: 90, damage: 35, hp: 40 },
-      reaper: { speed: 120, damage: 40, hp: 35 },
-      overlord: { speed: 100, damage: 60, hp: 100 }
-    };
+      const phaseTypes = {
+        1: ['crawler', 'chaser', 'bouncer', 'leaper', 'exploder'],
+        2: ['bruiser', 'reaper', 'crawler', 'chaser', 'bouncer', 'leaper', 'exploder'],
+        default: ['bruiser', 'reaper', 'crawler', 'chaser', 'bouncer', 'leaper', 'exploder']
+      };
 
-    const stats = enemyStats[enemy.enemyType] || { speed: 100, damage: 20, hp: 20 };
-    enemy.setTexture(enemy.enemyType);
-    enemy.speed = stats.speed;
-    enemy.damage = stats.damage;
-    enemy.maxHP = stats.hp;
-    enemy.currentHP = stats.hp;
-    enemy.nameLabel = this.add.text(enemy.x, enemy.y - 35, enemy.enemyType.toUpperCase(), { fontSize: '12px', fill: '#fff' }).setOrigin(0.5);
-    enemy.hpBarBg = this.add.rectangle(enemy.x - 20, enemy.y - 20, 40, 5, 0x555555).setOrigin(0, 0.5);
-    enemy.hpBar = this.add.rectangle(enemy.x - 20, enemy.y - 20, 40, 5, 0xff0000).setOrigin(0, 0.5);
+      const types = phaseTypes[this.phase] || phaseTypes.default;
+      enemy.enemyType = Phaser.Utils.Array.GetRandom(types);
+
+      const enemyStats = {
+        crawler: { speed: 60, damage: 15, hp: 20 },
+        chaser: { speed: 80, damage: 20, hp: 20 },
+        bouncer: { speed: 100, damage: 25, hp: 25 },
+        leaper: { speed: 130, damage: 25, hp: 20 },
+        exploder: { speed: 100, damage: 30, hp: 10 },
+        bruiser: { speed: 90, damage: 35, hp: 40 },
+        reaper: { speed: 120, damage: 40, hp: 35 },
+        overlord: { speed: 100, damage: 60, hp: 100 }
+      };
+
+      const stats = enemyStats[enemy.enemyType] || { speed: 100, damage: 20, hp: 20 };
+      enemy.setTexture(enemy.enemyType);
+      enemy.speed = stats.speed;
+      enemy.damage = stats.damage;
+      enemy.maxHP = stats.hp;
+      enemy.currentHP = stats.hp;
+      enemy.nameLabel = this.add.text(enemy.x, enemy.y - 35, enemy.enemyType.toUpperCase(), { fontSize: '12px', fill: '#fff' }).setOrigin(0.5);
+      enemy.hpBarBg = this.add.rectangle(enemy.x - 20, enemy.y - 20, 40, 5, 0x555555).setOrigin(0, 0.5);
+      enemy.hpBar = this.add.rectangle(enemy.x - 20, enemy.y - 20, 40, 5, 0xff0000).setOrigin(0, 0.5);
+    }
   }
 
   increaseDifficulty() {
