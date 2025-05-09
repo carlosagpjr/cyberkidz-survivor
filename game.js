@@ -40,11 +40,12 @@ class MainScene extends Phaser.Scene {
     this.playerHP = 100;
     this.bossSpawned = false;
 
-    this.hpText = this.add.text(110, 90, 'HP: 100', { fontSize: '16px', fill: '#FFFFFF' }).setScrollFactor(0).setOrigin(0.5);
-    this.hpBarBg = this.add.rectangle(10, 90, 200, 20, 0x555555).setOrigin(0).setScrollFactor(0);
-    this.hpBar = this.add.rectangle(10, 90, 200, 20, 0xff3333).setOrigin(0).setScrollFactor(0);
-    this.scoreText = this.add.text(10, 115, 'Score: 0', { fontSize: '20px', fill: '#FFFFFF' }).setScrollFactor(0);
-    this.timeText = this.add.text(400, 10, 'Stage 1 - Time: 0s', { fontSize: '22px', fill: '#FFFFFF' }).setScrollFactor(0).setOrigin(0.5, 0);
+    this.hpBarBg = this.add.rectangle(10, 90, 200, 20, 0x555555).setOrigin(0).setScrollFactor(0).setDepth(0);
+    this.hpBar = this.add.rectangle(10, 90, 200, 20, 0xff3333).setOrigin(0).setScrollFactor(0).setDepth(1);
+    this.hpText = this.add.text(110, 90 + 10, 'HP: 100', { fontSize: '16px', fill: '#FFFFFF' })
+      .setScrollFactor(0)
+      .setOrigin(0.5)
+      .setDepth(2);
 
     this.time.addEvent({ delay: 1000, callback: this.spawnEnemy, callbackScope: this, loop: true });
     this.physics.add.overlap(this.player, this.enemies, this.onPlayerHit, null, this);
