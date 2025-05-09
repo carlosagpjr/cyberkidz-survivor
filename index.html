@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <title>CyberKidz Survivor</title>
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+  <script>
+function startGame(weaponType) {
+  document.getElementById('startScreen').style.display = 'none';
+  const script = document.createElement('script');
+  script.src = './game.js';
+  document.body.appendChild(script);
+}
+</script>
   <style>
     body { margin: 0; }
     canvas { display: block; margin: auto; z-index: 1; position: relative; }
@@ -25,13 +33,6 @@
   <p id="finalStats" style="font-size:18px; margin-bottom:20px;"></p>
   <button onclick="location.reload()" style="padding:10px 20px; font-size:16px; border-radius:10px; border:none; cursor:pointer;">Restart</button>
 </div>
-<script>
-function startGame(weaponType) {
-  document.getElementById('startScreen').style.display = 'none';
-  const script = document.createElement('script');
-  script.src = './game.js';
-  document.body.appendChild(script);
-}
-</script>
+
 </body>
 </html>
