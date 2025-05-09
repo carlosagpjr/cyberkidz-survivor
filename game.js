@@ -40,16 +40,9 @@ class MainScene extends Phaser.Scene {
     this.playerHP = 100;
     this.bossSpawned = false;
 
-    this.hpBarBg = this.add.rectangle(10, 90, 200, 20, 0x555555).setOrigin(0).setScrollFactor(0).setDepth(0);
-    this.hpBar = this.add.rectangle(10, 90, 200, 20, 0xff3333).setOrigin(0).setScrollFactor(0).setDepth(1);
-    this.hpText = this.add.text(110, 100, 'HP: 100', { fontSize: '16px', fill: '#FFFFFF' })
-      .setScrollFactor(0)
-      .setOrigin(0.5)
-      .setDepth(2);
-    // moved hpText creation below the bars to ensure it's on top
-    // originally here:
-    // this.hpText = this.add.text(...);
-    
+    this.hpBarBg = this.add.rectangle(10, 90, 200, 20, 0x555555).setOrigin(0).setScrollFactor(0);
+    this.hpBar = this.add.rectangle(10, 90, 200, 20, 0xff3333).setOrigin(0).setScrollFactor(0);
+    this.hpText = this.add.text(10, 60, 'HP: 100', { fontSize: '20px', fill: '#FFFFFF' }).setScrollFactor(0);    
 
     this.time.addEvent({ delay: 1000, callback: this.spawnEnemy, callbackScope: this, loop: true });
     this.physics.add.overlap(this.player, this.enemies, this.onPlayerHit, null, this);
