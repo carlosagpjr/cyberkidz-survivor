@@ -5,7 +5,7 @@ class MainScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('player', 'https://labs.phaser.io/assets/sprites/phaser-dude.png');
+    this.load.image('player', './assets/player-icon.png');
     this.load.image('crawler', 'https://labs.phaser.io/assets/sprites/ufo.png');
     this.load.image('chaser', 'https://labs.phaser.io/assets/sprites/space-baddie.png');
     this.load.image('bouncer', 'https://labs.phaser.io/assets/sprites/asteroid.png');
@@ -55,10 +55,17 @@ class MainScene extends Phaser.Scene {
   update() {
     const speed = 200;
     this.player.setVelocity(0);
+
     if (this.cursors.W.isDown) this.player.setVelocityY(-speed);
     if (this.cursors.S.isDown) this.player.setVelocityY(speed);
-    if (this.cursors.A.isDown) this.player.setVelocityX(-speed);
-    if (this.cursors.D.isDown) this.player.setVelocityX(speed);
+
+    if (this.cursors.A.isDown) {
+      this.player.setVelocityX(-speed);
+      this.player.setFlipX(true); // Espelha para a esquerda
+    } else if (this.cursors.D.isDown) {
+      this.player.setVelocityX(speed);
+      this.player.setFlipX(false); // Normal para a direita
+    }
 
     this.enemies.getChildren().forEach(enemy => {
       this.physics.moveToObject(enemy, this.player, enemy.speed || 100);
@@ -69,7 +76,7 @@ class MainScene extends Phaser.Scene {
 
     const elapsed = Math.floor((this.time.now - this.startTime) / 1000);
     const remaining = Math.max(0, Math.ceil((this.nextPhaseTime - this.time.now) / 1000));
-    this.timeText.setText('Fase ' + this.phase + ' - Tempo: ' + remaining + 's');
+    this.timeText.setText('Stage ' + this.phase + ' - Time: ' + remaining + 's');
 
     if (this.time.now >= this.nextPhaseTime) {
       this.phase++;
@@ -115,16 +122,14 @@ class MainScene extends Phaser.Scene {
     } else {
       const enemy = this.enemies.create(spawnPoint.x, spawnPoint.y, 'chaser');
 
-      if (this.phase === 1) {
-        const commomTypes = ['crawler', 'chaser', 'bouncer', 'leaper', 'exploder'];
-        enemy.enemyType = Phaser.Utils.Array.GetRandom(commomTypes);
-      } else if (this.phase === 2) {
-        const eliteTypes = ['bruiser', 'reaper'].concat(['crawler', 'chaser', 'bouncer', 'leaper', 'exploder']);
-        enemy.enemyType = Phaser.Utils.Array.GetRandom(eliteTypes);
-      } else {
-        const mix = ['bruiser', 'reaper', 'crawler', 'chaser', 'bouncer', 'leaper', 'exploder'];
-        enemy.enemyType = Phaser.Utils.Array.GetRandom(mix);
-      }
+      const phaseTypes = {
+        1: ['crawler', 'chaser', 'bouncer', 'leaper', 'exploder'],
+        2: ['bruiser', 'reaper', 'crawler', 'chaser', 'bouncer', 'leaper', 'exploder'],
+        default: ['bruiser', 'reaper', 'crawler', 'chaser', 'bouncer', 'leaper', 'exploder']
+      };
+
+      const types = phaseTypes[this.phase] || phaseTypes.default;
+      enemy.enemyType = Phaser.Utils.Array.GetRandom(types);
 
       const enemyStats = {
         crawler: { speed: 60, damage: 15, hp: 20 },
@@ -160,9 +165,9 @@ class MainScene extends Phaser.Scene {
     if (enemy.currentHP > 10) {
       enemy.currentHP -= 10;
     } else {
-      if (enemy.nameLabel) { enemy.nameLabel.destroy(); delete enemy.nameLabel; }
-      if (enemy.hpBar) { enemy.hpBar.destroy(); delete enemy.hpBar; }
-      if (enemy.hpBarBg) { enemy.hpBarBg.destroy(); delete enemy.hpBarBg; }
+      if (enemy.nameLabel) enemy.nameLabel.destroy();
+      if (enemy.hpBar) enemy.hpBar.destroy();
+      if (enemy.hpBarBg) enemy.hpBarBg.destroy();
       enemy.destroy();
       this.score++;
       this.scoreText.setText('Score: ' + this.score);
@@ -184,7 +189,7 @@ class MainScene extends Phaser.Scene {
     if (this.playerHP <= 0) {
       this.physics.pause();
       const elapsed = Math.floor((this.time.now - this.startTime) / 1000);
-      document.getElementById('finalStats').innerText = `Tempo: ${elapsed}s | Pontos: ${this.score}`;
+      document.getElementById('finalStats').innerText = `Time: ${elapsed}s | Score: ${this.score}`;
       const gameOverDiv = document.getElementById('gameOver');
       gameOverDiv.style.opacity = 0;
       gameOverDiv.style.display = 'flex';
