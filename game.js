@@ -15,7 +15,7 @@ class MainScene extends Phaser.Scene {
     this.load.image('reaper', './assets/reaper-icon.png');
     this.load.image('overlord', './assets/overlord-icon.png');
     this.load.image('bullet', 'https://labs.phaser.io/assets/sprites/bullets/bullet11.png');
-    this.load.image('background', './assets/wasteland-background.png');
+    this.load.image('background', './assets/wasteland-background1.png');
   }
 
   create() {
