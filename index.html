@@ -29,13 +29,14 @@
       border-radius: 15px;
       max-width: 700px;
       font-size: 10px;
+      font-family: 'Press Start 2P', cursive; 
       line-height: 1.8;
       text-align: center;
     }
 
     .weapon-button {
-      width: 120px;
-      height: 160px;
+      width: 130px;
+      height: 150px;
       border-radius: 15px;
       border: none;
       font-size: 14px;
@@ -61,11 +62,15 @@
       cursor: default;
     }
 
+    .weapon-button:disabled img {
+      opacity: 0.5;
+    }
+
     #rankingTable {
       margin-top: 40px;
       border-collapse: collapse;
       width: 90%;
-      max-width: 600px;
+      max-width: 700px;
       background: #ffffffcc;
       border-radius: 10px;
       overflow: hidden;
