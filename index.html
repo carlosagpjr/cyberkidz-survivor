@@ -7,24 +7,121 @@
   <style>
     body { margin: 0; }
     canvas { display: block; margin: auto; z-index: 1; position: relative; }
+
+    #startScreen {
+      z-index: 10;
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: #a2cce2;
+      color: #1e0e28;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: sans-serif;
+    }
+
+    .weapon-button {
+      width: 120px;
+      height: 160px;
+      border-radius: 15px;
+      border: none;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      background-color: #f2f2f2;
+      color: #1e0e28;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .weapon-button img {
+      width: 64px;
+      height: 64px;
+    }
+
+    .weapon-button:disabled {
+      background-color: #f2f2f2;
+      color: #aaa;
+      cursor: default;
+    }
+
+    #rankingTable {
+      margin-top: 40px;
+      border-collapse: collapse;
+      width: 90%;
+      max-width: 600px;
+      background: #ffffffcc;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 10px #00000044;
+    }
+
+    #rankingTable th, #rankingTable td {
+      padding: 12px 16px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    #rankingTable th {
+      background-color: #ff5757;
+      color: #ffffff;
+    }
+
+    #rankingTable tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    #rankingTable tr:nth-child(odd) {
+      background-color: #e2e2e2;
+    }
   </style>
 </head>
 <body>
-<div id="startScreen" style="z-index: 10; position:absolute; top:0; left:0; width:100%; height:100%; background:#a2cce2; color:#1e0e28; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:sans-serif;">
-  <img src="./assets/cyberkidz-club-logo.png" width="300" alt="CyberKidz Club Logo" style="margin-bottom: 20px;" />
+<div id="startScreen">
+  <img src="./assets/cyberkidz-club-logo.png" width="400" alt="CyberKidz Club Logo" style="margin-bottom: 20px;" />
   <h1>Survivor Game</h1>
   <p>Choose your weapon:</p>
   <div style="display:flex; gap:10px;">
-    <button onclick="startGame('range')" style="width:120px; height:120px; border-radius:15px; border:none; font-size:14px; font-weight:bold; cursor:pointer; background-color:#f2f2f2; color:#1e0e28;">Blaster</button>
-    <button disabled style="width:120px; height:120px; border-radius:15px; border:none; font-size:14px; font-weight:bold; background-color:#f2f2f2; color:#aaa;">Sword</button>
-    <button disabled style="width:120px; height:120px; border-radius:15px; border:none; font-size:14px; font-weight:bold; background-color:#f2f2f2; color:#aaa;">Glove</button>
+    <button class="weapon-button" onclick="startGame('range')">
+      <img src="./assets/blaster-icon.png" alt="Blaster Icon">
+      Blaster
+    </button>
+    <button class="weapon-button" disabled>
+      <img src="./assets/sword-icon.png" alt="Sword Icon">
+      Sword
+    </button>
+    <button class="weapon-button" disabled>
+      <img src="./assets/lash-icon.png" alt="Lash Icon">
+      Lash
+    </button>
   </div>
+
+  <table id="rankingTable">
+    <thead>
+      <tr>
+        <th>WALLET</th>
+        <th>TIME</th>
+        <th>SCORE</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>0x123...abc</td><td>45s</td><td>120</td></tr>
+      <tr><td>0x456...def</td><td>61s</td><td>190</td></tr>
+      <tr><td>0x789...ghi</td><td>30s</td><td>85</td></tr>
+    </tbody>
+  </table>
 </div>
+
 <div id="gameOver" style="display:none; opacity:0; pointer-events: none; z-index: 15; position:absolute; top:0; left:0; width:100%; height:100%; background:#000000; color:white; font-family:sans-serif; display:flex; flex-direction:column; align-items:center; justify-content:center;">
   <h2 style="color:#ff3333; font-size:36px; margin-bottom:20px;">GAME OVER</h2>
   <p id="finalStats" style="font-size:18px; margin-bottom:20px;"></p>
   <button onclick="location.reload()" style="padding:10px 20px; font-size:16px; border-radius:10px; border:none; cursor:pointer;">Restart</button>
 </div>
+
 <script>
 function startGame(weaponType) {
   document.getElementById('startScreen').style.display = 'none';
