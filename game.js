@@ -123,27 +123,24 @@ class MainScene extends Phaser.Scene {
 
   update() {
     const speed = 200;
-    this.player.setVelocity(0);
+    let move = new Phaser.Math.Vector2(0, 0);
 
-    // Movimento por joystick se mobile
     if (this.isMobile && this.joystickVector) {
-      this.player.setVelocity(
-        this.joystickVector.x * speed,
-        this.joystickVector.y * speed
-      );
-      if (this.joystickVector.x < 0) this.player.setFlipX(true);
-      if (this.joystickVector.x > 0) this.player.setFlipX(false);
+      move.copy(this.joystickVector);
+    } else {
+      if (this.cursors.W.isDown) move.y -= 1;
+      if (this.cursors.S.isDown) move.y += 1;
+      if (this.cursors.A.isDown) move.x -= 1;
+      if (this.cursors.D.isDown) move.x += 1;
     }
 
-    if (this.cursors.W.isDown) this.player.setVelocityY(-speed);
-    if (this.cursors.S.isDown) this.player.setVelocityY(speed);
-
-    if (this.cursors.A.isDown) {
-      this.player.setVelocityX(-speed);
-      this.player.setFlipX(true);
-    } else if (this.cursors.D.isDown) {
-      this.player.setVelocityX(speed);
-      this.player.setFlipX(false);
+    if (move.length() > 0) {
+      move.normalize();
+      this.player.setVelocity(move.x * speed, move.y * speed);
+      if (move.x < 0) this.player.setFlipX(true);
+      if (move.x > 0) this.player.setFlipX(false);
+    } else {
+      this.player.setVelocity(0);
     }
 
     this.enemies.getChildren().forEach(enemy => {
