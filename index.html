@@ -10,7 +10,8 @@
       margin: 0;
       padding: 0;
       overflow: hidden;
-      height: 100%;
+      width: 100vw; /* Garante largura total da viewport */
+      height: 100vh; /* Garante altura total da viewport */
       font-family: 'Press Start 2P', cursive;
     }
     canvas {
@@ -172,6 +173,7 @@
   <button onclick="location.reload()" style="padding:10px 20px; font-size:16px; border-radius:10px; border:none; cursor:pointer;">Restart</button>
 </div>
 <script>
+// Função chamada ao iniciar o jogo. Injeta game.js após ocultar a tela inicial
 function startGame(weaponType) {
   document.getElementById('startScreen').style.display = 'none';
   const script = document.createElement('script');
