@@ -42,6 +42,49 @@ class MainScene extends Phaser.Scene {
   }
 
   create() {
+    // Detecta se é mobile
+    this.isMobile = window.innerWidth <= 768;
+
+    // Joystick virtual (Graphics)
+    if (this.isMobile) {
+      this.joystickBase = this.add.graphics().setScrollFactor(0);
+      this.joystickBase.fillStyle(0x888888, 0.5);
+      this.joystickBase.fillCircle(100, this.sys.game.config.height - 100, 50);
+
+      this.joystickThumb = this.add.graphics().setScrollFactor(0);
+      this.joystickThumb.fillStyle(0xffffff, 0.8);
+      this.joystickThumb.fillCircle(100, this.sys.game.config.height - 100, 25);
+
+      this.joystickVector = new Phaser.Math.Vector2(0, 0);
+      this.joystickPointerId = null;
+
+      this.input.on('pointerdown', pointer => {
+        if (this.joystickPointerId === null && pointer.x < this.sys.game.config.width / 2) {
+          this.joystickPointerId = pointer.id;
+          this.joystickThumb.setPosition(pointer.x, pointer.y);
+        }
+      });
+
+      this.input.on('pointermove', pointer => {
+        if (pointer.id === this.joystickPointerId) {
+          const dx = pointer.x - 100;
+          const dy = pointer.y - (this.sys.game.config.height - 100);
+          const distance = Math.min(50, Math.sqrt(dx * dx + dy * dy));
+          const angle = Math.atan2(dy, dx);
+          this.joystickVector.setTo(Math.cos(angle) * distance / 50, Math.sin(angle) * distance / 50);
+          this.joystickThumb.setPosition(100 + this.joystickVector.x * 50, this.sys.game.config.height - 100 + this.joystickVector.y * 50);
+        }
+      });
+
+      this.input.on('pointerup', pointer => {
+        if (pointer.id === this.joystickPointerId) {
+          this.joystickPointerId = null;
+          this.joystickVector.set(0, 0);
+          this.joystickThumb.setPosition(100, this.sys.game.config.height - 100);
+        }
+      });
+    }
+    
     const mapWidth = 5000;
     const mapHeight = 5000;
     this.add.tileSprite(0, 0, mapWidth, mapHeight, 'background').setOrigin(0);
@@ -78,6 +121,16 @@ class MainScene extends Phaser.Scene {
   update() {
     const speed = 200;
     this.player.setVelocity(0);
+
+    // Movimento por joystick se mobile
+    if (this.isMobile && this.joystickVector) {
+      this.player.setVelocity(
+        this.joystickVector.x * speed,
+        this.joystickVector.y * speed
+      );
+      if (this.joystickVector.x < 0) this.player.setFlipX(true);
+      if (this.joystickVector.x > 0) this.player.setFlipX(false);
+    }
 
     if (this.cursors.W.isDown) this.player.setVelocityY(-speed);
     if (this.cursors.S.isDown) this.player.setVelocityY(speed);
