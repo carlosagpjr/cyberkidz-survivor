@@ -14,7 +14,7 @@ const config = {
 };
 
 // Inicializa Phaser com tamanho adaptável
-new Phaser.Game(config);
+const game = new Phaser.Game(config); // Armazena o jogo para acesso global
 
 // Adapta automaticamente o tamanho se a janela for redimensionada
 window.addEventListener('resize', () => {
