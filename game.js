@@ -1,27 +1,25 @@
-// Substitui valores fixos por dimensões da viewport
-const config = {
-  type: Phaser.AUTO,
-  width: window.innerWidth, // Largura da viewport
-  height: window.innerHeight, // Altura da viewport
-  backgroundColor: '#222222',
-  physics: {
-    default: 'arcade',
-    arcade: {
-      debug: false
-    }
-  },
-  scene: MainScene
-};
+// Função que inicializa o Phaser com dimensões da viewport
+function startPhaserGame() {
+  const config = {
+    type: Phaser.AUTO,
+    width: window.innerWidth,
+    height: window.innerHeight,
+    backgroundColor: '#222222',
+    physics: {
+      default: 'arcade',
+      arcade: {
+        debug: false
+      }
+    },
+    scene: MainScene
+  };
 
-// Inicializa Phaser com tamanho adaptável
-const game = new Phaser.Game(config); // Armazena o jogo para acesso global
+  const game = new Phaser.Game(config);
 
-// Adapta automaticamente o tamanho se a janela for redimensionada
-window.addEventListener('resize', () => {
-  config.width = window.innerWidth;
-  config.height = window.innerHeight;
-  game.scale.resize(config.width, config.height);
-});
+  window.addEventListener('resize', () => {
+    game.scale.resize(window.innerWidth, window.innerHeight);
+  });
+}
 
 class MainScene extends Phaser.Scene {
   constructor() {
