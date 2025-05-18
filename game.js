@@ -47,13 +47,15 @@ class MainScene extends Phaser.Scene {
 
     // Joystick virtual (Graphics)
     if (this.isMobile) {
-      this.joystickBase = this.add.graphics().setScrollFactor(0);
+      this.joystickBase = this.add.graphics().setScrollFactor(0).setDepth(1000); // profundidade alta
       this.joystickBase.fillStyle(0x888888, 0.5);
-      this.joystickBase.fillCircle(100, this.sys.game.config.height - 100, 50);
+      console.log('Joystick ativo');
+      const baseY = this.scale.height - 100;
+      this.joystickBase.fillCircle(100, baseY, 50);
 
-      this.joystickThumb = this.add.graphics().setScrollFactor(0);
+      this.joystickThumb = this.add.graphics().setScrollFactor(0).setDepth(1001); // acima da base
       this.joystickThumb.fillStyle(0xffffff, 0.8);
-      this.joystickThumb.fillCircle(100, this.sys.game.config.height - 100, 25);
+      this.joystickThumb.fillCircle(100, this.scale.height - 100, 25);
 
       this.joystickVector = new Phaser.Math.Vector2(0, 0);
       this.joystickPointerId = null;
@@ -67,12 +69,13 @@ class MainScene extends Phaser.Scene {
 
       this.input.on('pointermove', pointer => {
         if (pointer.id === this.joystickPointerId) {
+          const baseY = this.scale.height - 100;
           const dx = pointer.x - 100;
-          const dy = pointer.y - (this.sys.game.config.height - 100);
+          const dy = pointer.y - baseY;
           const distance = Math.min(50, Math.sqrt(dx * dx + dy * dy));
           const angle = Math.atan2(dy, dx);
           this.joystickVector.setTo(Math.cos(angle) * distance / 50, Math.sin(angle) * distance / 50);
-          this.joystickThumb.setPosition(100 + this.joystickVector.x * 50, this.sys.game.config.height - 100 + this.joystickVector.y * 50);
+          this.joystickThumb.setPosition(100 + this.joystickVector.x * 50, baseY + this.joystickVector.y * 50);
         }
       });
 
@@ -80,7 +83,7 @@ class MainScene extends Phaser.Scene {
         if (pointer.id === this.joystickPointerId) {
           this.joystickPointerId = null;
           this.joystickVector.set(0, 0);
-          this.joystickThumb.setPosition(100, this.sys.game.config.height - 100);
+          this.joystickThumb.setPosition(100, this.scale.height - 100);
         }
       });
     }
