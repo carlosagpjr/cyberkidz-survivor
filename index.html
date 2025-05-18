@@ -178,6 +178,7 @@ function startGame(weaponType) {
   document.getElementById('startScreen').style.display = 'none';
   const script = document.createElement('script');
   script.src = './game.js';
+  script.onload = () => startPhaserGame(); // Chama o jogo após carregar o script
   document.body.appendChild(script);
 }
 </script>
