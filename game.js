@@ -1,3 +1,28 @@
+// Substitui valores fixos por dimensões da viewport
+const config = {
+  type: Phaser.AUTO,
+  width: window.innerWidth, // Largura da viewport
+  height: window.innerHeight, // Altura da viewport
+  backgroundColor: '#222222',
+  physics: {
+    default: 'arcade',
+    arcade: {
+      debug: false
+    }
+  },
+  scene: MainScene
+};
+
+// Inicializa Phaser com tamanho adaptável
+new Phaser.Game(config);
+
+// Adapta automaticamente o tamanho se a janela for redimensionada
+window.addEventListener('resize', () => {
+  config.width = window.innerWidth;
+  config.height = window.innerHeight;
+  game.scale.resize(config.width, config.height);
+});
+
 class MainScene extends Phaser.Scene {
   constructor() {
     super('MainScene');
@@ -61,10 +86,10 @@ class MainScene extends Phaser.Scene {
 
     if (this.cursors.A.isDown) {
       this.player.setVelocityX(-speed);
-      this.player.setFlipX(true); // Espelha para a esquerda
+      this.player.setFlipX(true);
     } else if (this.cursors.D.isDown) {
       this.player.setVelocityX(speed);
-      this.player.setFlipX(false); // Normal para a direita
+      this.player.setFlipX(false);
     }
 
     this.enemies.getChildren().forEach(enemy => {
@@ -207,19 +232,3 @@ class MainScene extends Phaser.Scene {
     }
   }
 }
-
-const config = {
-  type: Phaser.AUTO,
-  width: 800,
-  height: 600,
-  backgroundColor: '#222222',
-  physics: {
-    default: 'arcade',
-    arcade: {
-      debug: false
-    }
-  },
-  scene: MainScene
-};
-
-new Phaser.Game(config);
